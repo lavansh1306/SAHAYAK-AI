@@ -1,0 +1,10 @@
+.venv/
+node_modules/
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.env
+# everything the app stores at runtime (your uploaded files, warehouse, run history, generated reports)
+data/*
+!data/.gitkeep

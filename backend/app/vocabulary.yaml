@@ -1,0 +1,76 @@
+# Optional vocabulary used to understand questions. Edit freely - no code change needed.
+# synonyms: words people use -> words that appear in column / table names
+synonyms:
+  revenue: [sales value, turnover, income, earning, earnings, earned, earn, kamai, billing amount]
+  volume: [quantity, qty, consumption, consumed, offtake, usage, sold volume]
+  sold: [sales, sale, sell, selling, dispensed, dispensing, bikri]
+  ufg: [gas loss, loss of gas, unaccounted, unaccounted for gas, line loss, losses, leakage loss]
+  pct: [percent, percentage, "%", rate of]
+  amount: [value, money, rupees, rs, inr]
+  paid: [payment, payments, collected, collection, received amount]
+  customers: [consumers, clients, users, connections]
+  complaints: [tickets, grievances, issues, shikayat]
+  downtime: [outage, breakdown hours, down time, not working]
+  overspeed: [speeding, over speed, over-speeding, rash driving]
+  idle: [idling, waiting]
+  pressure: [dabav]
+  tanker: [truck, vehicle, lorry, driver]
+  station: [outlet, pump]
+  area: [region, zone, location, city, district, ga]
+  segment: [customer type, category of customer]
+  budget: [target, plan, planned]
+  tariff: [price, rate per scm, rate]
+  trips: [journeys, runs]
+  delay: [late, lateness]
+# Hindi / Hinglish words -> English
+hinglish:
+  kitna: how much
+  kitni: how much
+  kitne: how many
+  kaun sa: which
+  kaunsa: which
+  kaun si: which
+  kis: which
+  sabse zyada: highest
+  sabse jyada: highest
+  sabse adhik: highest
+  sabse kam: lowest
+  zyada: more
+  jyada: more
+  kam: less
+  pichle mahine: last month
+  pichhle mahine: last month
+  pichla mahina: last month
+  is mahine: this month
+  is saal: this year
+  pichle saal: last year
+  pichhle saal: last year
+  dikhao: show
+  batao: tell
+  bataiye: tell
+  kul: total
+  ka: ""
+  ki: ""
+  ke: ""
+  mein: in
+  aur: and
+  wala: ""
+  wali: ""
+  kar raha hai: ""
+  kar rahi hai: ""
+  hai: ""
+  hain: ""
+  tha: ""
+  thi: ""
+  karo: ""
+  kya: what
+  kab: when
+  kahan: where
+  har: each
+  mahina: month
+  mahine: month
+  saal: year
+  din: day
+# measures where a higher number is bad ("worst" = highest)
+higher_is_bad: [loss, ufg, downtime, delay, complaint, complaints, idle, overspeed, breach, outstanding, arrears, cost, expense, leak,
+                defect, error, failure, incident, harsh, brake, unpaid, overdue, pending, backlog, open]
