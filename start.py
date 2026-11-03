@@ -83,7 +83,7 @@ def ensure_env_file() -> None:
     env, ex = ROOT / ".env", ROOT / ".env.example"
     if not env.exists() and ex.exists():
         shutil.copy(ex, env)
-        say("Created .env - add your OPENROUTER_API_KEY there to enable the LLM (the app also works without it).")
+        say("Created .env - configured for local Ollama at http://127.0.0.1:11434 with model 'qwen3:4b'.")
 
 
 def wait_for(url: str, seconds: int = 90) -> bool:

@@ -50,20 +50,17 @@ class Settings:
     """LLM and runtime switches from environment variables (read lazily so tests can change them)."""
 
     @property
-    def openrouter_api_key(self) -> str:
-        return env("OPENROUTER_API_KEY")
+    def ollama_model(self) -> str:
+        return env("OLLAMA_MODEL", "qwen3:4b")
 
     @property
-    def openrouter_model(self) -> str:
-        return env("OPENROUTER_MODEL", "openrouter/free")
-
-    @property
-    def openrouter_base_url(self) -> str:
-        return env("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1").rstrip("/")
+    def ollama_base_url(self) -> str:
+        url = env("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
+        return url
 
     @property
     def llm_enabled(self) -> bool:
-        return bool(self.openrouter_api_key) and env("LLM_ENABLED", "true").lower() != "false"
+        return env("LLM_ENABLED", "true").lower() != "false"
 
     @property
     def llm_narration(self) -> bool:
@@ -71,7 +68,7 @@ class Settings:
 
     @property
     def llm_timeout(self) -> float:
-        return float(env("LLM_TIMEOUT_SECONDS", "45"))
+        return float(env("LLM_TIMEOUT_SECONDS", "120"))
 
     @property
     def as_of_date(self) -> str:

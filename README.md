@@ -42,9 +42,10 @@ Built for Assam Gas Company Ltd (AGCL) under the C-DAC SAHAYAK-AI brief, but not
   - Without Node, the app serves the ready-built screens from the backend.
   - Run `python start.py --prod` once with Node to build them.
 - **Internet on first start**, to install packages.
-- **An OpenRouter key** (optional) for the language model.
-  - Get one free at https://openrouter.ai/keys.
-  - Without a key the app still works, using rules only.
+- **Local Ollama** (optional, for the local language model):
+  - Install Ollama from https://ollama.com (runs 100% locally and privately, no data leaves your machine).
+  - Pull the model: `ollama pull qwen3:4b`
+  - Without Ollama, the app still works completely using deterministic rules.
 
 ---
 
@@ -72,12 +73,14 @@ python start.py
 | `python start.py --backend-port 8001 --frontend-port 5174` | use other ports |
 | `start.bat` (Windows) / `./start.sh` (Mac, Linux) | same as `python start.py` |
 
-**Turn on the language model:**
-1. Open `.env`.
-2. Paste your key after `OPENROUTER_API_KEY=`.
-3. Restart.
-
-The model is `openrouter/free` by default.
+**Using the local language model (Ollama):**
+1. Ensure Ollama is running (`systemctl status ollama` or `ollama serve`).
+2. Pull the model once:
+   ```bash
+   ollama pull qwen3:4b
+   ```
+3. The `.env` file defaults to `OLLAMA_BASE_URL=http://127.0.0.1:11434` and `OLLAMA_MODEL=qwen3:4b`.
+4. The model runs fully locally on CPU or GPU; no API key or cloud account is required.
 
 ---
 
@@ -150,7 +153,7 @@ To start over: **Data dictionary → Delete all data** (type `DELETE ALL DATA`).
 └──────────────────────────────────────────────────────────────────────────────────────┘
                  │ only to understand wording / write a one-line summary
                  ▼
-        OpenRouter LLM (openrouter/free) - optional; never calculates numbers
+        Local Ollama LLM (qwen3:4b on http://127.0.0.1:11434) - optional; never calculates numbers
 ```
 
 ### Who does what
@@ -410,7 +413,7 @@ The page also shows the formulas found in the data, quality checks, load history
 | R7 | Insights | 12 generic detectors with evidence, charts and severity |
 | R8 | Decision support | Alert rules + automatic alerts + notifications; what to act on first; what-if; plan vs actual |
 | R9 | Fewer manual errors | Cell-by-cell check of manual Excel reports with causes and an annotated copy; document number check |
-| LLM | OpenRouter `openrouter/free` | JSON-schema plans, caching, retry and rate-limit breaker, number-checked summaries; rule-based fallback |
+| LLM | Local Ollama `qwen3:4b` | JSON-schema plans, caching, circuit breaker, number-checked summaries; deterministic rule-based fallback |
 | Start | One command | `python start.py` |
 
 ---
@@ -420,7 +423,7 @@ The page also shows the formulas found in the data, quality checks, load history
 | Where | What |
 |---|---|
 | **Settings page** (saved to `data/state/settings.yaml`) | Company name, short name, financial-year start month, number style (Indian/International), pipeline strictness (when to ask, when a file joins an existing table, quarantine level) |
-| `.env` | `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` (default `openrouter/free`), `LLM_ENABLED`, `LLM_NARRATION`, `LLM_TIMEOUT_SECONDS`, `AS_OF_DATE` (fix "today" for testing), `SAHAYAK_DATA_DIR` (move the data folder) |
+| `.env` | `OLLAMA_BASE_URL` (default `http://127.0.0.1:11434`), `OLLAMA_MODEL` (default `qwen3:4b`), `LLM_ENABLED`, `LLM_NARRATION`, `LLM_TIMEOUT_SECONDS`, `AS_OF_DATE` (fix "today" for testing), `SAHAYAK_DATA_DIR` (move the data folder) |
 | `backend/app/vocabulary.yaml` | Extra words people use (synonyms), Hinglish → English, and words that mean "higher is worse" (loss, delay, complaints …) |
 | Data dictionary page | Everything about your tables (section 9) |
 
@@ -530,7 +533,7 @@ Interactive docs are at **http://127.0.0.1:8000/docs**.
 - **Size.** Data is held in memory. It is comfortable up to roughly 1–2 million rows per table on a normal laptop.
 - **No forecasting** yet; trends describe the past only.
 - **No logins or roles** yet; anyone who can open the page can upload or delete.
-- **The free LLM** can be slow or rate-limited. Simple questions are answered by rules; complex wording may need rephrasing until the model is back.
+- **CPU LLM latency.** Running a local LLM on CPU takes several seconds per inference. If a query times out or Ollama is offline, the system seamlessly falls back to fast rule-based execution.
 
 The Antigravity prompts in `docs/ANTIGRAVITY_PROMPTS.md` cover each of these.
 
@@ -546,6 +549,9 @@ The Antigravity prompts in `docs/ANTIGRAVITY_PROMPTS.md` cover each of these.
 | A number looks wrong | Open *Details: how it was computed* under the answer. Check the table, period, filters and how the number adds up. Fix labels or how it adds up on the Data dictionary page |
 | A question is not understood | Add the words you use as synonyms on the Data dictionary page, or rephrase with the column name |
 | Wrong file loaded | Data dictionary → the table → **Roll back last load** |
-| LLM shows "off" or "paused" | Add the key in `.env`; the free model may be rate-limited and the app works rule-based meanwhile |
+| "Ollama service is not running" | Ensure Ollama is started: run `ollama serve` or check `systemctl status ollama` |
+| "Model 'qwen3:4b' not found" | Pull the model: run `ollama pull qwen3:4b` |
+| "Ollama request timed out" | On slower CPUs, increase `LLM_TIMEOUT_SECONDS=180` in `.env` |
+| LLM shows "off" or "paused" | Check `LLM_ENABLED=true` in `.env`; if circuit opened after an error it automatically resets shortly |
 | Start over | Data dictionary → Delete all data |
 # AGCL_CDAC

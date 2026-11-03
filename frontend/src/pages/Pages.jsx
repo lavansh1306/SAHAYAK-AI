@@ -236,19 +236,18 @@ export function SettingsPage({ health, refresh, toast, onChanged }) {
         </div>
       ) : <p className="notes">Loading…</p>}
       <div className="panel">
-        <h3>Language model (OpenRouter)</h3>
-        <p className="notes" style={{ paddingLeft: 0 }}>The model only helps understand questions and write a one-line summary. All numbers come from code, so the app keeps working (rule-based) when the free model is busy or no key is set.</p>
+        <h3>Language model (Ollama)</h3>
+        <p className="notes" style={{ paddingLeft: 0 }}>The model only helps understand questions and write a one-line summary. All numbers come from code, so the app keeps working (rule-based) when the local model is busy or off.</p>
         {l ? (
           <ul className="notes" style={{ paddingLeft: 16 }}>
+            <li>Endpoint: {l.base_url}</li>
             <li>Model: {l.model}</li>
-            <li>API key: {l.key_present ? 'set' : 'not set - add OPENROUTER_API_KEY to the .env file in the project folder and restart'}</li>
-            <li>Status: {l.enabled ? (l.circuit_open ? 'paused after a rate limit; will retry shortly' : 'ready') : 'off (rule-based mode)'}</li>
-            {l.last_model ? <li>Last model used by the free router: {l.last_model}</li> : null}
+            <li>Status: {l.enabled ? (l.circuit_open ? 'paused after an error; will retry shortly' : 'ready') : 'off (rule-based mode)'}</li>
             <li>Calls so far: {l.calls}; answers served from cache: {l.cache_hits}</li>
             {l.last_error ? <li>Last error: {l.last_error}</li> : null}
           </ul>
         ) : <p className="notes">Loading…</p>}
-        <button className="btn ghost" onClick={async () => { setTest('Testing…'); try { const r = await api.llmTest(); setTest(r.ok ? `Model replied: ${r.reply}` : `No reply. ${r.status.last_error || 'Check the key.'}`) } catch (e) { setTest(e.message) } refresh() }}>Test the model</button>
+        <button className="btn ghost" onClick={async () => { setTest('Testing…'); try { const r = await api.llmTest(); setTest(r.ok ? `Model replied: ${r.reply}` : `No reply. ${r.status.last_error || 'Check Ollama.'}`) } catch (e) { setTest(e.message) } refresh() }}>Test the model</button>
         {test ? <p>{test}</p> : null}
       </div>
     </div>
